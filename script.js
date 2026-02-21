@@ -376,193 +376,214 @@
   function initHeroSequence() {
     var tl = gsap.timeline({ defaults: { ease: 'power3.out' } });
 
-    tl.to('.hero-tag', { opacity: 1, y: 0, duration: 0.8, delay: 0.15 })
-      .to('.hero-line', { opacity: 1, y: 0, duration: 1.2, stagger: 0.2, ease: 'power4.out' }, '-=0.4')
-      .to('.hero-philosophy', { opacity: 1, y: 0, duration: 0.9 }, '-=0.5')
-      .to('.hero-meta', { opacity: 1, y: 0, duration: 0.7 }, '-=0.4')
-      .to('.hero-ctas', { opacity: 1, y: 0, duration: 0.6 }, '-=0.3')
-      .to('.scroll-cue', { opacity: 1, duration: 0.5 }, '-=0.1');
+    // Set chips to invisible before animating
+    gsap.set('.hero-chip', { opacity: 0, y: 8 });
+
+    // Portrait fades in first — cinematic reveal
+    tl.fromTo('.hero-visual',
+        { opacity: 0, scale: 0.97 },
+        { opacity: 1, scale: 1, duration: 1.2, ease: 'power2.out' }, 0
+      )
+      // Chips drift in after portrait is visible
+      .to('.hero-chip-location', { opacity: 1, y: 0, duration: 0.55, ease: 'power2.out' }, 0.7)
+      .to('.hero-chip-status', { opacity: 1, y: 0, duration: 0.55, ease: 'power2.out' }, 0.85)
+      .to('.hero-chip-stat', { opacity: 1, y: 0, duration: 0.55, ease: 'power2.out' }, 0.95)
+      // Left side text sequence
+      .to('.hero-tag', { opacity: 1, y: 0, duration: 0.7 }, 0.1)
+      .to('.hero-line', { opacity: 1, y: 0, duration: 1.0, stagger: 0.15, ease: 'power3.out' }, 0.3)
+      .to('.hero-philosophy', { opacity: 1, y: 0, duration: 0.8 }, '-=0.4')
+      .to('.hero-meta', { opacity: 1, y: 0, duration: 0.65 }, '-=0.35')
+      .to('.hero-ctas', { opacity: 1, y: 0, duration: 0.55 }, '-=0.25')
+      .to('.scroll-cue', { opacity: 1, duration: 0.45 }, '-=0.1');
   }
 
   // ======================== SCROLL REVEAL ANIMATIONS ========================
   function initScrollAnimations() {
+    // Standard reveal — one-shot, eased, staggered by sibling index
     document.querySelectorAll('.cin-reveal').forEach(function (el) {
       var parent = el.parentElement;
       var siblings = parent ? Array.from(parent.querySelectorAll(':scope > .cin-reveal')) : [];
       var idx = siblings.indexOf(el);
 
       gsap.to(el, {
-        scrollTrigger: { trigger: el, start: 'top 88%', toggleActions: 'play none none none' },
-        opacity: 1, y: 0, duration: 0.9, delay: idx * 0.08, ease: 'power3.out'
+        scrollTrigger: { trigger: el, start: 'top 90%', toggleActions: 'play none none none' },
+        opacity: 1, y: 0, duration: 1.1, delay: idx * 0.07, ease: 'power2.out'
       });
     });
 
+    // Section headings — wipe reveal
     document.querySelectorAll('.section-heading, .contact-heading').forEach(function (h) {
       gsap.fromTo(h,
         { clipPath: 'inset(0 100% 0 0)', opacity: 0 },
         {
-          scrollTrigger: { trigger: h, start: 'top 85%', toggleActions: 'play none none none' },
-          clipPath: 'inset(0 0% 0 0)', opacity: 1, duration: 1.2, ease: 'power3.inOut'
+          scrollTrigger: { trigger: h, start: 'top 88%', toggleActions: 'play none none none' },
+          clipPath: 'inset(0 0% 0 0)', opacity: 1, duration: 1.0, ease: 'power2.inOut'
         }
       );
     });
 
+    // Hero parallax — scrub:1.5 adds smooth momentum lag
     gsap.to('#hero .hero-content', {
-      scrollTrigger: { trigger: '#hero', start: 'top top', end: 'bottom top', scrub: true },
-      y: -120, opacity: 0.15, scale: 0.97, ease: 'none'
+      scrollTrigger: { trigger: '#hero', start: 'top top', end: 'bottom top', scrub: 1.5 },
+      y: -60, opacity: 0.65, ease: 'none'
     });
 
     gsap.to('.scroll-cue', {
-      scrollTrigger: { trigger: '#hero', start: '60px top', end: '180px top', scrub: true },
-      opacity: 0, y: -15
+      scrollTrigger: { trigger: '#hero', start: '40px top', end: '160px top', scrub: 1 },
+      opacity: 0, y: -10
     });
 
-    // Section dividers fade in
+    // Section dividers
     document.querySelectorAll('.section-divider').forEach(function (div) {
       gsap.fromTo(div,
         { opacity: 0 },
         {
-          scrollTrigger: { trigger: div, start: 'top 92%', toggleActions: 'play none none none' },
-          opacity: 1, duration: 1.2, ease: 'power2.out'
+          scrollTrigger: { trigger: div, start: 'top 94%', toggleActions: 'play none none none' },
+          opacity: 1, duration: 1.0, ease: 'power2.out'
         }
       );
     });
   }
 
-  // ======================== PINNED CINEMATIC SECTIONS ========================
+  // ======================== SECTION ENTRANCE / EXIT ========================
   function initPinnedSections() {
     var sections = [
-      { id: '#about' },
-      { id: '#ventures' },
-      { id: '#work' },
-      { id: '#arsenal' },
-      { id: '#beyond' },
-      { id: '#contact' }
+      '#about', '#experience', '#ventures', '#work',
+      '#arsenal', '#beyond', '#contact'
     ];
 
-    sections.forEach(function (sec) {
-      var el = document.querySelector(sec.id);
+    sections.forEach(function (id) {
+      var el = document.querySelector(id);
       if (!el) return;
 
+      // Fade in — opacity only, no scale (scale scrub causes visual judder)
       gsap.fromTo(el,
-        { opacity: 0.3, scale: 0.96 },
+        { opacity: 0.75 },
         {
-          scrollTrigger: {
-            trigger: el,
-            start: 'top 95%',
-            end: 'top 40%',
-            scrub: true
-          },
-          opacity: 1, scale: 1, ease: 'none'
+          scrollTrigger: { trigger: el, start: 'top 100%', end: 'top 50%', scrub: 1.8 },
+          opacity: 1, ease: 'none'
         }
       );
 
-      if (sec.id !== '#contact') {
+      // Very gentle exit — barely perceptible, keeps text legible
+      if (id !== '#contact') {
         gsap.to(el, {
-          scrollTrigger: {
-            trigger: el,
-            start: 'bottom 60%',
-            end: 'bottom 10%',
-            scrub: true
-          },
-          opacity: 0.2, y: -30, ease: 'none'
+          scrollTrigger: { trigger: el, start: 'bottom 80%', end: 'bottom -10%', scrub: 1.8 },
+          opacity: 0.9, y: -12, ease: 'none'
         });
       }
     });
   }
 
-  // ======================== SCRUB-BASED CARD ANIMATIONS ========================
+  // ======================== CARD REVEAL ANIMATIONS ========================
   function initScrubCards() {
+    // Experience cards — one-shot with stagger
+    gsap.utils.toArray('.exp-card').forEach(function (card, i) {
+      gsap.fromTo(card,
+        { opacity: 0, y: 28 },
+        {
+          scrollTrigger: { trigger: card, start: 'top 92%', toggleActions: 'play none none none' },
+          opacity: 1, y: 0, duration: 0.85, delay: i * 0.1, ease: 'power2.out'
+        }
+      );
+    });
+
+    // Venture cards — simple fade up, no x-slide or 3D rotation
     gsap.utils.toArray('.venture-card').forEach(function (card, i) {
       gsap.fromTo(card,
-        { opacity: 0, x: i % 2 === 0 ? -60 : 60, rotateY: i % 2 === 0 ? 5 : -5 },
+        { opacity: 0, y: 24 },
         {
-          scrollTrigger: { trigger: card, start: 'top 90%', end: 'top 55%', scrub: true },
-          opacity: 1, x: 0, rotateY: 0, ease: 'none'
+          scrollTrigger: { trigger: card, start: 'top 92%', toggleActions: 'play none none none' },
+          opacity: 1, y: 0, duration: 0.85, delay: i * 0.08, ease: 'power2.out'
         }
       );
     });
 
+    // Project cards — stagger by column position, no scale
     gsap.utils.toArray('.project-card').forEach(function (card, i) {
       gsap.fromTo(card,
-        { opacity: 0, y: 50, scale: 0.92 },
+        { opacity: 0, y: 30 },
         {
-          scrollTrigger: { trigger: card, start: 'top 92%', end: 'top 60%', scrub: true },
-          opacity: 1, y: 0, scale: 1, ease: 'none'
+          scrollTrigger: { trigger: card, start: 'top 93%', toggleActions: 'play none none none' },
+          opacity: 1, y: 0, duration: 0.9, delay: (i % 3) * 0.09, ease: 'power2.out'
         }
       );
     });
 
+    // Life cards
     gsap.utils.toArray('.life-card').forEach(function (card, i) {
-      var row = Math.floor(i / 2);
-      var col = i % 2;
       gsap.fromTo(card,
-        { opacity: 0, y: 60 + row * 20, rotate: (col - 0.5) * 2, scale: 0.9 },
+        { opacity: 0, y: 28 },
         {
-          scrollTrigger: { trigger: card, start: 'top 92%', end: 'top 58%', scrub: true },
-          opacity: 1, y: 0, rotate: 0, scale: 1, ease: 'none'
+          scrollTrigger: { trigger: card, start: 'top 92%', toggleActions: 'play none none none' },
+          opacity: 1, y: 0, duration: 0.85, delay: (i % 2) * 0.1, ease: 'power2.out'
         }
       );
     });
 
+    // Arsenal groups
     gsap.utils.toArray('.arsenal-group').forEach(function (group, i) {
       gsap.fromTo(group,
-        { opacity: 0, y: 40 },
+        { opacity: 0, y: 24 },
         {
-          scrollTrigger: { trigger: group, start: 'top 92%', end: 'top 65%', scrub: true },
-          opacity: 1, y: 0, ease: 'none'
+          scrollTrigger: { trigger: group, start: 'top 92%', toggleActions: 'play none none none' },
+          opacity: 1, y: 0, duration: 0.8, delay: (i % 3) * 0.07, ease: 'power2.out'
         }
       );
     });
 
+    // Contact grid
     var contactGrid = document.querySelector('.contact-grid');
     if (contactGrid) {
       gsap.fromTo(contactGrid,
-        { opacity: 0, y: 80, scale: 0.92 },
+        { opacity: 0, y: 36 },
         {
-          scrollTrigger: { trigger: contactGrid, start: 'top 90%', end: 'top 45%', scrub: true },
-          opacity: 1, y: 0, scale: 1, ease: 'none'
+          scrollTrigger: { trigger: contactGrid, start: 'top 90%', toggleActions: 'play none none none' },
+          opacity: 1, y: 0, duration: 1.0, ease: 'power2.out'
         }
       );
     }
 
+    // Section tags
     document.querySelectorAll('.section-tag').forEach(function (tag) {
       gsap.fromTo(tag,
-        { opacity: 0, x: -30 },
+        { opacity: 0, x: -16 },
         {
-          scrollTrigger: { trigger: tag, start: 'top 88%', end: 'top 70%', scrub: true },
-          opacity: 1, x: 0, ease: 'none'
+          scrollTrigger: { trigger: tag, start: 'top 90%', toggleActions: 'play none none none' },
+          opacity: 1, x: 0, duration: 0.7, ease: 'power2.out'
         }
       );
     });
 
+    // Section numbers
     document.querySelectorAll('.section-num').forEach(function (num) {
       gsap.fromTo(num,
-        { opacity: 0, scale: 0.5 },
+        { opacity: 0 },
         {
-          scrollTrigger: { trigger: num, start: 'top 88%', end: 'top 70%', scrub: true },
-          opacity: 1, scale: 1, ease: 'none'
+          scrollTrigger: { trigger: num, start: 'top 90%', toggleActions: 'play none none none' },
+          opacity: 1, duration: 0.8, ease: 'power2.out'
         }
       );
     });
 
+    // Positioning pills
     document.querySelectorAll('.positioning-strip span').forEach(function (pill, i) {
       gsap.fromTo(pill,
-        { opacity: 0, y: 20, scale: 0.8 },
+        { opacity: 0, y: 12 },
         {
-          scrollTrigger: { trigger: pill, start: 'top 90%', toggleActions: 'play none none none' },
-          opacity: 1, y: 0, scale: 1, duration: 0.6, delay: i * 0.1, ease: 'back.out(1.7)'
+          scrollTrigger: { trigger: pill, start: 'top 92%', toggleActions: 'play none none none' },
+          opacity: 1, y: 0, duration: 0.6, delay: i * 0.08, ease: 'power2.out'
         }
       );
     });
 
-    // Project card image stats — count up on scroll
+    // Project stats
     document.querySelectorAll('.project-img-stat').forEach(function (stat) {
       gsap.fromTo(stat,
-        { opacity: 0, scale: 0.6 },
+        { opacity: 0 },
         {
-          scrollTrigger: { trigger: stat, start: 'top 85%', toggleActions: 'play none none none' },
-          opacity: 0.15, scale: 1, duration: 1.2, ease: 'power3.out'
+          scrollTrigger: { trigger: stat, start: 'top 88%', toggleActions: 'play none none none' },
+          opacity: 0.15, duration: 1.0, ease: 'power2.out'
         }
       );
     });
@@ -570,7 +591,7 @@
 
   // ======================== CARD TILT ========================
   function initCardTilt() {
-    document.querySelectorAll('.venture-card, .project-card, .life-card').forEach(function (card) {
+    document.querySelectorAll('.venture-card, .project-card, .life-card, .exp-card').forEach(function (card) {
       card.addEventListener('mousemove', function (e) {
         var rect = card.getBoundingClientRect();
         var x = (e.clientX - rect.left) / rect.width - 0.5;
