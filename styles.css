@@ -1269,6 +1269,17 @@ button { font-family: inherit; }
 
   .about-grid { grid-template-columns: 1fr; gap: 40px; }
   .ventures-grid { grid-template-columns: 1fr; }
+  .venture-card-featured {
+    grid-template-columns: 1fr !important;
+    padding: 32px !important;
+    min-height: auto;
+  }
+  .venture-card-featured .venture-details,
+  .venture-card-featured .venture-tags {
+    grid-column: 1 !important;
+    grid-row: auto !important;
+  }
+  .venture-card-featured h3 { font-size: 1.8rem !important; }
   .projects-grid { grid-template-columns: 1fr; }
   .project-hero {
     grid-column: span 1;
@@ -1954,11 +1965,62 @@ button { font-family: inherit; }
 /* ======================== VENTURES SINGLE CARD ======================== */
 .ventures-single {
   grid-template-columns: 1fr !important;
-  max-width: 680px;
+  max-width: 100%;
 }
 
 .venture-card-featured {
-  padding: 48px !important;
+  padding: 56px !important;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  grid-template-rows: auto;
+  gap: 0 56px;
+  align-items: start;
+  min-height: 420px;
+}
+
+/* Left column: header + title + desc */
+.venture-card-featured .venture-header-row {
+  grid-column: 1;
+  grid-row: 1;
+  margin-bottom: 16px;
+}
+
+.venture-card-featured h3 {
+  grid-column: 1;
+  grid-row: 2;
+  font-size: 2.4rem !important;
+  margin-bottom: 20px;
+}
+
+.venture-card-featured .venture-desc {
+  grid-column: 1;
+  grid-row: 3;
+  font-size: 0.95rem !important;
+  margin-bottom: 0;
+}
+
+.venture-card-featured .venture-link {
+  grid-column: 1;
+  grid-row: 5;
+  margin-top: 28px;
+  align-self: end;
+}
+
+/* Right column: details + tags */
+.venture-card-featured .venture-details {
+  grid-column: 2;
+  grid-row: 1 / 4;
+  border-top: 1px solid var(--border);
+  border-bottom: 1px solid var(--border);
+  padding: 24px 0;
+  margin-bottom: 20px;
+  align-self: start;
+}
+
+.venture-card-featured .venture-tags {
+  grid-column: 2;
+  grid-row: 4;
+  margin-top: 4px;
 }
 
 /* ======================== VENTURE VIDEO BACKGROUND ======================== */
@@ -2000,7 +2062,8 @@ button { font-family: inherit; }
 .venture-card-video .venture-desc,
 .venture-card-video .venture-details,
 .venture-card-video .venture-tags,
-.venture-card-video .venture-link {
+.venture-card-video .venture-link,
+.venture-card-video .venture-badge {
   position: relative;
   z-index: 2;
 }
