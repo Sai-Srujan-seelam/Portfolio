@@ -671,36 +671,6 @@ button { font-family: inherit; cursor: pointer; }
   transform: translateY(-2px);
 }
 
-/* Scroll Cue */
-.scroll-cue {
-  position: absolute;
-  bottom: 40px;
-  left: 50%;
-  transform: translateX(-50%);
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 8px;
-  color: var(--hero-ink-muted, var(--text-3));
-  opacity: 0;
-  z-index: 2;
-}
-
-
-.scroll-cue svg { animation: bobDown 2s ease-in-out infinite; }
-
-.scroll-cue span {
-  font-family: var(--font-mono);
-  font-size: 0.6rem;
-  letter-spacing: 0.2em;
-  text-transform: uppercase;
-}
-
-@keyframes bobDown {
-  0%,100% { transform: translateY(0); }
-  50% { transform: translateY(6px); }
-}
-
 /* ======================== SECTION SYSTEM ======================== */
 .cin-section {
   position: relative;
@@ -1941,7 +1911,7 @@ button { font-family: inherit; cursor: pointer; }
   }
 
   .hero-line, .hero-tag, .hero-value-line, .hero-philosophy, .hero-meta,
-  .hero-ctas, .scroll-cue, .hero-name-code, .hero-name-dot {
+  .hero-ctas, .hero-name-code, .hero-name-dot {
     opacity: 1 !important;
     transform: none !important;
   }

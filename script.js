@@ -38,7 +38,7 @@
         ld.style.display = 'none';
         ld.setAttribute('aria-busy', 'false');
       }
-      document.querySelectorAll('.cin-reveal,.hero-tag,.hero-value-line,.hero-philosophy,.hero-meta,.hero-ctas,.scroll-cue').forEach(function (el) {
+      document.querySelectorAll('.cin-reveal,.hero-tag,.hero-value-line,.hero-philosophy,.hero-meta,.hero-ctas').forEach(function (el) {
         el.style.opacity = '1';
         el.style.transform = 'none';
       });
@@ -666,7 +666,6 @@
     gsap.to('.hero-philosophy', { opacity: 1, y: 0, duration: 0.78, ease: 'power3.out' });
     gsap.to('.hero-meta', { opacity: 1, y: 0, duration: 0.62, ease: 'power3.out' });
     gsap.to('.hero-ctas', { opacity: 1, y: 0, duration: 0.52, ease: 'power3.out' });
-    gsap.to('.scroll-cue', { opacity: 1, duration: 0.42, ease: 'power2.out' });
   }
 
   // ======================== HERO ENTRANCE ========================
@@ -720,11 +719,6 @@
     gsap.to('#hero .hero-content', {
       scrollTrigger: { trigger: '#hero', start: 'top top', end: 'bottom top', scrub: 1.5 },
       y: -60, opacity: 0.65, ease: 'none'
-    });
-
-    gsap.to('.scroll-cue', {
-      scrollTrigger: { trigger: '#hero', start: '40px top', end: '160px top', scrub: 1 },
-      opacity: 0, y: -10
     });
 
     // Section dividers (not in hero)
