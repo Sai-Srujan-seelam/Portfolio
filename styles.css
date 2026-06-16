@@ -960,34 +960,38 @@ button { font-family: inherit; cursor: pointer; }
   color: var(--text-2);
 }
 
-/* ======================== PROJECTS (Tier 2: Image cards + varied sizes) ======================== */
+/* ======================== PROJECTS (single-column, one-at-a-time, Apple-style) ======================== */
 .projects-grid {
-  display: grid;
-  grid-template-columns: repeat(12, 1fr);
-  grid-auto-rows: auto;
-  gap: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 36px;
   perspective: 1200px;
   transform-style: preserve-3d;
 }
 
-/* Hero project card spans 8 cols */
+/* Old grid-cell behavior stripped — all cards are full width now */
 .project-hero {
-  grid-column: span 8;
-  grid-row: span 1;
-  display: grid;
-  grid-template-columns: 1.1fr 1fr;
+  display: block;
+  grid-column: auto;
+  grid-template-columns: none;
   gap: 0;
   padding: 0;
 }
 
-.project-hero .project-card-image {
-  border-radius: 20px 0 0 20px;
+/* Disciplix prototype-style card (no image): side-by-side gradient + body when full-width */
+.project-card:not(.has-glass) {
+  flex-direction: row;
   min-height: 320px;
-  height: auto;
 }
-
-.project-hero .project-card-body {
-  padding: 36px;
+.project-card:not(.has-glass) .project-card-image {
+  flex: 0 0 38%;
+  height: auto;
+  min-height: 100%;
+  border-radius: 20px 0 0 20px;
+}
+.project-card:not(.has-glass) .project-card-body {
+  flex: 1;
+  padding: 40px 44px;
 }
 
 .project-card {
@@ -1020,6 +1024,36 @@ button { font-family: inherit; cursor: pointer; }
   overflow: hidden;
   border-radius: 20px 20px 0 0;
 }
+
+/* Photo cards (has-glass): image fills the ENTIRE card, glass holds all content.
+   Full-width single-column → tall cinematic canvas per project. */
+.project-card.has-glass {
+  display: block;
+  padding: 0;
+  background: #1a1a1a;
+  min-height: clamp(520px, 64vh, 680px);
+  isolation: isolate;
+}
+
+.project-hero.has-glass {
+  grid-template-columns: 1fr;
+  min-height: clamp(580px, 72vh, 740px);
+}
+
+.project-card.has-glass .project-card-image {
+  position: absolute;
+  inset: 0;
+  height: 100%;
+  border-radius: 20px;
+  z-index: 0;
+  overflow: hidden;
+}
+
+/* Hide the now-unused body for full-bleed glass cards */
+.project-card.has-glass .project-card-body { display: none; }
+
+/* Card glow shouldn't break stacking on glass cards */
+.project-card.has-glass .card-glow { z-index: -1; }
 
 .project-card-image[data-gradient="green"] {
   background: linear-gradient(135deg, rgba(37,99,235,0.08) 0%, rgba(8,145,178,0.05) 50%, var(--card-surface) 100%);
@@ -1062,6 +1096,182 @@ button { font-family: inherit; cursor: pointer; }
   letter-spacing: -0.03em;
   color: var(--text-1);
   opacity: 0.15;
+}
+
+/* Real project screenshot inside the card image area */
+.project-card-image picture,
+.project-card-image picture img {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  display: block;
+}
+
+.project-card-image picture img {
+  object-fit: cover;
+  object-position: top center;
+  transition: transform 0.7s var(--ease), filter 0.5s var(--ease);
+  filter: saturate(0.96);
+}
+
+.project-card:hover .project-card-image picture img {
+  transform: scale(1.04);
+  filter: saturate(1.05);
+}
+
+/* On photo cards, the gradient placeholder text is hidden — glass overlay takes over */
+.project-card-image.has-photo .project-card-image-inner { display: none; }
+
+/* Soft top-to-bottom darkening for legibility behind the glass panel */
+.project-card-image.has-photo::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background:
+    linear-gradient(180deg, rgba(0,0,0,0) 40%, rgba(0,0,0,0.45) 100%);
+  pointer-events: none;
+  z-index: 1;
+}
+
+/* ---- Apple-style glassmorphic content card — overlay anchored bottom-left ---- */
+.project-glass {
+  position: absolute;
+  left: 36px;
+  right: auto;
+  bottom: 36px;
+  width: min(480px, 46%);
+  z-index: 3;
+  padding: 26px 28px 22px;
+  border-radius: 22px;
+  background: rgba(255, 255, 255, 0.14);
+  border: 1px solid rgba(255, 255, 255, 0.22);
+  backdrop-filter: blur(26px) saturate(180%);
+  -webkit-backdrop-filter: blur(26px) saturate(180%);
+  box-shadow:
+    0 16px 48px rgba(0, 0, 0, 0.36),
+    inset 0 1px 0 rgba(255, 255, 255, 0.2);
+  color: #fff;
+  transition: background 0.5s var(--ease);
+}
+
+.project-card:hover .project-glass {
+  background: rgba(255, 255, 255, 0.2);
+}
+
+.has-glass .project-glass-eyebrow {
+  font-family: var(--font-mono);
+  font-size: 0.62rem;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: #fff;
+  opacity: 0.85;
+  display: block;
+  margin-bottom: 8px;
+}
+
+.has-glass .project-glass-title {
+  font-family: var(--font-display);
+  font-size: clamp(1.25rem, 1.8vw, 1.6rem);
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  line-height: 1.12;
+  color: #fff;
+  margin: 0 0 4px;
+  text-shadow: 0 2px 18px rgba(0, 0, 0, 0.4);
+}
+
+.project-hero.has-glass .project-glass-title {
+  font-size: clamp(1.6rem, 2.4vw, 2.2rem);
+}
+
+.has-glass .project-glass-sub {
+  display: block;
+  margin-top: 4px;
+  font-size: 0.82rem;
+  color: #fff;
+  opacity: 0.9;
+  font-weight: 500;
+  letter-spacing: 0.01em;
+}
+
+/* Floating stat chip — top-right of the image, also glass */
+.project-glass-stat {
+  position: absolute;
+  top: 16px;
+  right: 16px;
+  z-index: 3;
+  padding: 8px 14px;
+  border-radius: 999px;
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: 0.95rem;
+  color: #fff;
+  background: rgba(255, 255, 255, 0.18);
+  border: 1px solid rgba(255, 255, 255, 0.25);
+  backdrop-filter: blur(18px) saturate(180%);
+  -webkit-backdrop-filter: blur(18px) saturate(180%);
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.22);
+  letter-spacing: -0.01em;
+}
+
+/* Description / tags / links inside the glass panel — white-on-glass theme.
+   .has-glass prefix is REQUIRED — without it the late-declared
+   .project-card p / .project-card h3 rules win on specificity tie and turn text brown. */
+.has-glass .project-glass p {
+  font-size: 0.84rem;
+  line-height: 1.55;
+  color: #fff;
+  opacity: 0.95;
+  margin: 12px 0 14px;
+  text-shadow: 0 1px 8px rgba(0, 0, 0, 0.3);
+  flex: none;
+}
+
+.has-glass .project-glass .project-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin: 0 0 14px;
+}
+
+.has-glass .project-glass .project-tags span {
+  padding: 3px 9px;
+  border-radius: 5px;
+  font-family: var(--font-mono);
+  font-size: 0.62rem;
+  background: rgba(255, 255, 255, 0.16);
+  color: #fff;
+  border: 1px solid rgba(255, 255, 255, 0.22);
+}
+
+.has-glass .project-glass .project-links {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 4px;
+  padding-top: 14px;
+  border-top: 1px solid rgba(255, 255, 255, 0.22);
+}
+
+.has-glass .project-glass .proj-link-btn {
+  color: #fff;
+  background: rgba(255, 255, 255, 0.12);
+  border: 1px solid rgba(255, 255, 255, 0.32);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+}
+
+.has-glass .project-glass .proj-link-btn:hover {
+  color: #fff;
+  background: rgba(255, 255, 255, 0.24);
+  border-color: rgba(255, 255, 255, 0.55);
+}
+
+.has-glass .project-glass .proj-link-soon {
+  color: #fff;
+  opacity: 0.85;
+  border: 1px dashed rgba(255, 255, 255, 0.4);
 }
 
 .project-card-body {
@@ -1544,16 +1754,8 @@ button { font-family: inherit; cursor: pointer; }
 
 /* ======================== RESPONSIVE ======================== */
 @media (max-width: 1024px) {
-  .projects-grid { grid-template-columns: repeat(6, 1fr); }
-  .project-hero { grid-column: span 6; grid-template-columns: 1fr 1fr; }
-  .project-card:nth-child(2) { grid-column: span 3; }
-  .project-card:nth-child(3) { grid-column: span 3; }
-  .project-card:nth-child(4) { grid-column: span 6; }
-  .project-card:nth-child(5) { grid-column: span 6; }
-  .project-card:nth-child(6),
-  .project-card:nth-child(7) { grid-column: span 3; }
-  .project-card:nth-child(8) { grid-column: span 6; }
-  .project-hero .project-card-image { min-height: 240px; }
+  /* Projects already single-column via flex; just relax glass width */
+  .project-card.has-glass .project-glass { width: min(520px, 58%); }
   .arsenal-grid { grid-template-columns: repeat(2, 1fr); }
   .contact-grid { grid-template-columns: 1fr; gap: 40px; }
 }
@@ -1607,15 +1809,27 @@ button { font-family: inherit; cursor: pointer; }
     grid-row: auto !important;
   }
   .venture-card-featured h3 { font-size: 1.8rem !important; }
-  .projects-grid { grid-template-columns: 1fr; }
-  .project-hero {
-    grid-column: span 1;
-    grid-template-columns: 1fr;
+  .projects-grid { gap: 24px; }
+  .project-card.has-glass { min-height: 460px; }
+  .project-hero.has-glass { min-height: 540px; }
+  .project-glass {
+    left: 14px;
+    right: 14px;
+    bottom: 14px;
+    width: auto;
+    padding: 18px 18px 16px;
+    border-radius: 16px;
   }
-  .project-hero .project-card-image {
+  .project-glass-stat { top: 12px; right: 12px; padding: 6px 12px; font-size: 0.85rem; }
+  /* Disciplix-style (no image) collapses to stacked */
+  .project-card:not(.has-glass) { flex-direction: column; min-height: auto; }
+  .project-card:not(.has-glass) .project-card-image {
+    flex: none;
+    width: 100%;
+    min-height: 200px;
     border-radius: 20px 20px 0 0;
-    min-height: 180px;
   }
+  .project-card:not(.has-glass) .project-card-body { padding: 28px; }
   .arsenal-grid { grid-template-columns: 1fr; }
   .life-grid { grid-template-columns: 1fr; }
   .contact-grid { grid-template-columns: 1fr; gap: 32px; }
@@ -2421,66 +2635,22 @@ button { font-family: inherit; cursor: pointer; }
   text-transform: uppercase;
 }
 
-/* ======================== PROJECTS LAYOUT FIX ======================== */
+/* PROJECTS LAYOUT — single-column override of all earlier per-card grid spans */
 .projects-grid {
-  display: grid;
-  grid-template-columns: repeat(12, 1fr);
-  gap: 20px;
+  display: flex;
+  flex-direction: column;
+  grid-template-columns: none;
 }
-
-/* Hero card: 8 cols */
-.project-hero {
-  grid-column: span 8;
-  grid-row: span 1;
-  display: grid;
-  grid-template-columns: 1.1fr 1fr;
-  gap: 0;
-  padding: 0;
-}
-
-/* 1st small card: 4 cols */
-.project-card:nth-child(2) {
-  grid-column: span 4;
-}
-
-/* 2nd small card: 4 cols */
-.project-card:nth-child(3) {
-  grid-column: span 4;
-}
-
-/* Medium card: 8 cols */
-.project-card:nth-child(4) {
-  grid-column: span 8;
-}
-
-/* AI Chatbot SaaS: 4 cols */
-.project-card:nth-child(5) {
-  grid-column: span 4;
-}
-
-/* Client cards: 4 cols each */
+.project-hero,
+.project-card:nth-child(2),
+.project-card:nth-child(3),
+.project-card:nth-child(4),
+.project-card:nth-child(5),
 .project-card:nth-child(6),
-.project-card:nth-child(7) {
-  grid-column: span 4;
-}
-
-/* Last card full */
+.project-card:nth-child(7),
 .project-card:nth-child(8) {
-  grid-column: span 12;
-  display: grid;
-  grid-template-columns: 240px 1fr;
-  gap: 0;
-  padding: 0;
-}
-
-.project-card:nth-child(8) .project-card-image {
-  border-radius: 20px 0 0 20px;
-  height: auto;
-  min-height: 180px;
-}
-
-.project-card:nth-child(8) .project-card-body {
-  padding: 32px;
+  grid-column: auto;
+  grid-template-columns: none;
 }
 
 /* ======================== FOOTER ENHANCED ======================== */
@@ -2635,27 +2805,13 @@ button { font-family: inherit; cursor: pointer; }
 }
 
 @media (max-width: 768px) {
-  .projects-grid {
-    grid-template-columns: 1fr !important;
-  }
-  .project-hero,
-  .project-card:nth-child(2),
-  .project-card:nth-child(3),
-  .project-card:nth-child(4),
-  .project-card:nth-child(5),
-  .project-card:nth-child(6),
-  .project-card:nth-child(7),
-  .project-card:nth-child(8) {
-    grid-column: span 1 !important;
-    grid-template-columns: 1fr !important;
-  }
-  .project-hero .project-card-image,
-  .project-card:nth-child(8) .project-card-image {
-    border-radius: 20px 20px 0 0 !important;
-    height: 180px !important;
+  /* Single-column flex already handles the layout; we only need to neutralize
+     the per-card image sizing on non-glass cards so they collapse cleanly. */
+  .project-card:not(.has-glass):nth-child(n) .project-card-image {
+    height: auto !important;
     min-height: 180px !important;
+    border-radius: 20px 20px 0 0 !important;
   }
-  .project-card:nth-child(8) .project-card-body { padding: 24px; }
 }
 
 /* ======================== TEXT ANIMATION EFFECTS ======================== */

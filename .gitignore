@@ -1,1 +1,6 @@
 .claude/
+.DS_Store
+
+# Heavy unoptimized source images — keep locally, ship the WebP/JPG instead
+projects/*.png
+projects/*.heic
