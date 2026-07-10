@@ -160,8 +160,8 @@ button { font-family: inherit; cursor: pointer; }
   height: 100%;
   z-index: 0;
   pointer-events: none;
-  /* Full opacity — shader itself is tuned for subtlety */
-  opacity: 1;
+  /* Single veil here = identical shader strength behind every section */
+  opacity: 0.55;
 }
 
 /* ======================== GRAIN ======================== */
@@ -707,8 +707,8 @@ button { font-family: inherit; cursor: pointer; }
   position: relative;
   z-index: 2;
   padding: var(--section-pad) 0;
-  /* Translucent so the fixed WebGL shader reads through every section */
-  background: rgba(245, 240, 232, 0.78);
+  /* Transparent — shader strength is controlled once on #shader-canvas */
+  background: transparent;
   will-change: transform, opacity;
   transform-origin: center top;
   backface-visibility: hidden;
