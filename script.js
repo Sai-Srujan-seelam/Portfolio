@@ -715,18 +715,6 @@
       scrollTrigger: { trigger: '#hero', start: 'top top', end: 'bottom top', scrub: 1.5 },
       y: -60, opacity: 0.65, ease: 'none'
     });
-
-    // Section dividers (not in hero)
-    document.querySelectorAll('.section-divider').forEach(function (div) {
-      if (div.closest('#hero')) return;
-      gsap.fromTo(div,
-        { opacity: 0 },
-        {
-          scrollTrigger: { trigger: div, start: 'top 96%', toggleActions: 'play none none none' },
-          opacity: 1, duration: 0.55, ease: 'power2.out'
-        }
-      );
-    });
   }
 
   // ======================== CARD REVEAL ANIMATIONS ========================
