@@ -415,31 +415,6 @@ button { font-family: inherit; cursor: pointer; }
   z-index: 0;
 }
 
-/* Editorial topline — fills the band between nav and hero content */
-.hero-topline {
-  position: absolute;
-  top: calc(var(--nav-h) + 12px);
-  left: var(--side-pad);
-  right: var(--side-pad);
-  display: flex;
-  justify-content: space-between;
-  gap: 16px;
-  padding-bottom: 12px;
-  border-bottom: 1px solid var(--border);
-  font-family: var(--font-mono);
-  font-size: 0.6rem;
-  font-weight: 500;
-  letter-spacing: 0.12em;
-  text-transform: uppercase;
-  color: var(--hero-ink-muted, var(--text-3));
-  z-index: 2;
-  opacity: 0;
-}
-
-@media (max-width: 640px) {
-  .hero-topline-mid { display: none; }
-}
-
 /* ======================== HERO QUADRANT GRID ======================== */
 .hero-quad {
   position: relative;
@@ -449,7 +424,7 @@ button { font-family: inherit; cursor: pointer; }
   width: 100%;
   display: grid;
   grid-template-columns: 1.5fr 1fr;
-  grid-template-rows: auto auto;
+  grid-template-rows: auto auto auto;
   column-gap: clamp(40px, 5vw, 80px);
   row-gap: clamp(22px, 3.5vh, 40px);
 }
@@ -473,17 +448,17 @@ button { font-family: inherit; cursor: pointer; }
   justify-content: flex-start;
 }
 
-/* CTAs sit directly under the portrait */
+/* CTAs under the ledger, left column */
 .hq-actions {
-  grid-column: 2;
-  grid-row: 2;
+  grid-column: 1;
+  grid-row: 3;
   justify-content: flex-start;
 }
 
-/* Portrait starts at the very top of the hero */
+/* Portrait owns the whole right side */
 .hq-portrait {
   grid-column: 2;
-  grid-row: 1;
+  grid-row: 1 / 4;
 }
 
 .hq-actions .hero-tag { margin-bottom: 14px; }
@@ -2269,7 +2244,7 @@ button { font-family: inherit; cursor: pointer; }
     transform: none !important;
   }
 
-  .hero-line, .hero-tag, .hero-topline, .hq-role, .hq-row, .hero-meta,
+  .hero-line, .hero-tag, .hq-role, .hq-row, .hero-meta,
   .hero-ctas, .hero-name-code, .hero-name-dot {
     opacity: 1 !important;
     transform: none !important;
@@ -2310,13 +2285,12 @@ button { font-family: inherit; cursor: pointer; }
 
 .hq-portrait .hero-portrait { border-radius: 12px; }
 
-/* Match the source photo's 3:4 ratio exactly so nothing gets cropped */
+/* Width-driven 3:4 box = the exact shape of the photo, so zero crop */
 .hq-portrait .hero-visual {
   flex: 0 0 auto;
-  height: clamp(300px, 46vh, 460px);
+  width: 100%;
+  height: auto;
   aspect-ratio: 3 / 4;
-  width: auto;
-  max-width: 100%;
 }
 
 /* Solo cinematic portrait — fills the full right column */
@@ -2816,7 +2790,7 @@ button { font-family: inherit; cursor: pointer; }
   }
   .hq-name .hero-name { font-size: clamp(3rem, 12vw, 4.6rem); }
   .hq-name, .hq-results, .hq-actions, .hq-portrait { grid-column: auto; grid-row: auto; }
-  .hq-portrait .hero-visual { height: 340px; }
+  .hq-portrait .hero-visual { height: 340px; width: auto; }
   .bio-map::before { left: 74px; }
   .bio-map::after { left: 70.5px; }
   .bio-node { grid-template-columns: 56px 1fr; column-gap: 40px; }
