@@ -38,7 +38,7 @@
         ld.style.display = 'none';
         ld.setAttribute('aria-busy', 'false');
       }
-      document.querySelectorAll('.cin-reveal,.hero-tag,.hq-role,.hq-row,.hero-meta,.hero-ctas,.hero-visual').forEach(function (el) {
+      document.querySelectorAll('.cin-reveal,.hero-tag,.hero-topline,.hq-role,.hq-row,.hero-meta,.hero-ctas,.hero-visual').forEach(function (el) {
         el.style.opacity = '1';
         el.style.transform = 'none';
       });
@@ -677,6 +677,7 @@
         { opacity: 1, scale: 1, duration: 1.2, ease: 'power2.out' }, 0
       )
       .to('.hero-tag', { opacity: 1, y: 0, duration: 0.7 }, 0.1)
+      .to('.hero-topline', { opacity: 1, duration: 0.8 }, 0.2)
       .call(function () {
         initHeroTypewriter(revealHeroRest);
       }, null, 0.42);
@@ -932,5 +933,15 @@
       setMobileNavOpen(false);
     }
   });
+
+  // ======================== LOCAL TIME (hero topline) ========================
+  var timeEl = document.getElementById('local-time');
+  if (timeEl) {
+    var tickClock = function () {
+      timeEl.textContent = new Date().toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit' });
+    };
+    tickClock();
+    setInterval(tickClock, 30000);
+  }
 
 })();

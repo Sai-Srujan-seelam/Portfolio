@@ -415,6 +415,31 @@ button { font-family: inherit; cursor: pointer; }
   z-index: 0;
 }
 
+/* Editorial topline — fills the band between nav and hero content */
+.hero-topline {
+  position: absolute;
+  top: calc(var(--nav-h) + 12px);
+  left: var(--side-pad);
+  right: var(--side-pad);
+  display: flex;
+  justify-content: space-between;
+  gap: 16px;
+  padding-bottom: 12px;
+  border-bottom: 1px solid var(--border);
+  font-family: var(--font-mono);
+  font-size: 0.6rem;
+  font-weight: 500;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--hero-ink-muted, var(--text-3));
+  z-index: 2;
+  opacity: 0;
+}
+
+@media (max-width: 640px) {
+  .hero-topline-mid { display: none; }
+}
+
 /* ======================== HERO QUADRANT GRID ======================== */
 .hero-quad {
   position: relative;
@@ -710,7 +735,8 @@ button { font-family: inherit; cursor: pointer; }
   position: relative;
   z-index: 2;
   padding: var(--section-pad) 0;
-  background: var(--bg);
+  /* Translucent so the fixed WebGL shader reads through every section */
+  background: rgba(245, 240, 232, 0.78);
   will-change: transform, opacity;
   transform-origin: center top;
   backface-visibility: hidden;
@@ -2243,7 +2269,7 @@ button { font-family: inherit; cursor: pointer; }
     transform: none !important;
   }
 
-  .hero-line, .hero-tag, .hq-role, .hq-row, .hero-meta,
+  .hero-line, .hero-tag, .hero-topline, .hq-role, .hq-row, .hero-meta,
   .hero-ctas, .hero-name-code, .hero-name-dot {
     opacity: 1 !important;
     transform: none !important;
