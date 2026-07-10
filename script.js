@@ -38,7 +38,7 @@
         ld.style.display = 'none';
         ld.setAttribute('aria-busy', 'false');
       }
-      document.querySelectorAll('.cin-reveal,.hero-tag,.hero-value-line,.hero-philosophy,.hero-meta,.hero-ctas').forEach(function (el) {
+      document.querySelectorAll('.cin-reveal,.hero-tag,.hq-role,.hq-row,.hero-meta,.hero-ctas,.hero-visual').forEach(function (el) {
         el.style.opacity = '1';
         el.style.transform = 'none';
       });
@@ -662,8 +662,8 @@
   }
 
   function revealHeroRest() {
-    gsap.to('.hero-value-line', { opacity: 1, y: 0, duration: 0.65, ease: 'power3.out' });
-    gsap.to('.hero-philosophy', { opacity: 1, y: 0, duration: 0.78, ease: 'power3.out' });
+    gsap.to('.hq-role', { opacity: 1, y: 0, duration: 0.6, ease: 'power3.out' });
+    gsap.to('.hq-row', { opacity: 1, y: 0, duration: 0.6, ease: 'power3.out', stagger: 0.09 });
     gsap.to('.hero-meta', { opacity: 1, y: 0, duration: 0.62, ease: 'power3.out' });
     gsap.to('.hero-ctas', { opacity: 1, y: 0, duration: 0.52, ease: 'power3.out' });
   }
@@ -672,15 +672,10 @@
   function initHeroSequence() {
     var tl = gsap.timeline({ defaults: { ease: 'power3.out' } });
 
-    gsap.set('.hero-chip', { opacity: 0, y: 8 });
-
     tl.fromTo('.hero-visual',
         { opacity: 0, scale: 0.97 },
         { opacity: 1, scale: 1, duration: 1.2, ease: 'power2.out' }, 0
       )
-      .to('.hero-chip-location', { opacity: 1, y: 0, duration: 0.55, ease: 'power2.out' }, 0.7)
-      .to('.hero-chip-status', { opacity: 1, y: 0, duration: 0.55, ease: 'power2.out' }, 0.85)
-      .to('.hero-chip-stat', { opacity: 1, y: 0, duration: 0.55, ease: 'power2.out' }, 0.95)
       .to('.hero-tag', { opacity: 1, y: 0, duration: 0.7 }, 0.1)
       .call(function () {
         initHeroTypewriter(revealHeroRest);
@@ -716,7 +711,7 @@
     });
 
     // Hero parallax — unchanged
-    gsap.to('#hero .hero-content', {
+    gsap.to('#hero .hero-quad', {
       scrollTrigger: { trigger: '#hero', start: 'top top', end: 'bottom top', scrub: 1.5 },
       y: -60, opacity: 0.65, ease: 'none'
     });
@@ -810,17 +805,6 @@
         {
           scrollTrigger: { trigger: tag, start: 'top 90%', toggleActions: 'play none none none' },
           opacity: 1, x: 0, duration: 0.7, ease: 'power2.out'
-        }
-      );
-    });
-
-    // Section numbers
-    document.querySelectorAll('.section-num').forEach(function (num) {
-      gsap.fromTo(num,
-        { opacity: 0 },
-        {
-          scrollTrigger: { trigger: num, start: 'top 90%', toggleActions: 'play none none none' },
-          opacity: 1, duration: 0.8, ease: 'power2.out'
         }
       );
     });
