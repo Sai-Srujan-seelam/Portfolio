@@ -396,7 +396,7 @@ button { font-family: inherit; cursor: pointer; }
   display: flex;
   flex-direction: column;
   justify-content: center;
-  padding: calc(var(--nav-h) + 48px) var(--side-pad) 72px;
+  padding: calc(var(--nav-h) + 28px) var(--side-pad) 48px;
   overflow: hidden;
   /* Stronger text contrast vs warm bg + shader */
   --hero-ink: #070605;
@@ -2284,9 +2284,13 @@ button { font-family: inherit; cursor: pointer; }
 
 .hq-portrait .hero-portrait { border-radius: 12px; }
 
+/* Match the source photo's 3:4 ratio exactly so nothing gets cropped */
 .hq-portrait .hero-visual {
   flex: 0 0 auto;
-  height: clamp(300px, 42vh, 430px);
+  height: clamp(300px, 46vh, 460px);
+  aspect-ratio: 3 / 4;
+  width: auto;
+  max-width: 100%;
 }
 
 /* Solo cinematic portrait — fills the full right column */
